@@ -6,7 +6,11 @@ const splitterModule = {
   getters: {},
   mutations: {
     toggle(state, shouldOpen) {
-      state.open = shouldOpen;
+      if (typeof shouldOpen === 'boolean') {
+        state.open = shouldOpen;
+      } else {
+        state.open = !state.open;
+      }
     },
   },
   actions: {},
