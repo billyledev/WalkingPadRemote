@@ -130,7 +130,7 @@ const treadmillModule = {
       return true;
     },
     updateSpeed(context, speed) {
-      if (context.state.speed < 10 || context.state.speed > 60) return false;
+      if (context.state.speed < 0 || context.state.speed > 60) return false;
       context.commit('updateData', { speed });
       context.dispatch('treadmill/sendSpeed', {}, { root: true });
       return true;
