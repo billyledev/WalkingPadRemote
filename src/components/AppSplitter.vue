@@ -8,20 +8,18 @@
       <Menu/>
     </v-ons-splitter-side>
     <v-ons-splitter-content>
-      <Home/>
+      <router-view></router-view>
     </v-ons-splitter-content>
   </v-ons-splitter>
 </template>
 
 <script>
 import Menu from '@/views/MenuView.vue';
-import Home from '@/views/HomeView.vue';
 
 export default {
   name: 'AppSplitter',
   components: {
     Menu,
-    Home,
   },
   computed: {
     isOpen: {

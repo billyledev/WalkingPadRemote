@@ -8,7 +8,7 @@
 import Toolbar from '@/components/Toolbar.vue';
 
 export default {
-  name: 'HomeView',
+  name: 'RemoteView',
   components: {
     Toolbar,
   },
