@@ -9,7 +9,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import AppSplitter from '@/AppSplitter.vue';
+import AppSplitter from '@/components/AppSplitter.vue';
 
 export default {
   name: 'App',
