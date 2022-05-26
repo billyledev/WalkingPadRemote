@@ -51,6 +51,7 @@ const treadmillModule = {
     },
     distance(state) {
       const asString = state.speed.toString();
+      if (state.distance === 0) return '0 m';
       if (state.distance < 100) return `${asString}0 m`;
       return `${asString.substring(0, asString.length - 2)}.${asString.substring(asString.length - 2)} km`;
     },
