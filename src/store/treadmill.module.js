@@ -84,7 +84,7 @@ const treadmillModule = {
         .then((server) => server?.getPrimaryService(WP_SERVICE_ID))
         .then((service) => {
           // Receive data from WalkingPad
-          service.getCharacteristic(WP_READ_CHARACTERISTIC_ID)
+          service?.getCharacteristic(WP_READ_CHARACTERISTIC_ID)
             .then((readCharacteristic) => readCharacteristic.startNotifications())
             .then((readCharacteristic) => {
               context.commit('setReadCharacteristic', readCharacteristic);
@@ -136,12 +136,12 @@ const treadmillModule = {
     },
     sendMode(context) {
       const command = buildCommand(SET_MODE_CMD, context.state.mode);
-      context.state.writeCharacteristic.writeValueWithoutResponse(command);
+      context.state.writeCharacteristic?.writeValueWithoutResponse(command);
       return true;
     },
     sendSpeed(context) {
       const command = buildCommand(SET_SPEED_CMD, context.state.speed);
-      context.state.writeCharacteristic.writeValueWithoutResponse(command);
+      context.state.writeCharacteristic?.writeValueWithoutResponse(command);
       return true;
     },
   },
