@@ -45,6 +45,7 @@ const treadmillModule = {
   getters: {
     speed(state) {
       const asString = state.speed.toString();
+      if (state.speed === 0) return '0 km/h';
       if (state.speed < 10) return `0.${asString} km/h`;
       return `${asString.charAt(0)}.${asString.charAt(1)} km/h`;
     },
