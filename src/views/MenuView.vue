@@ -6,8 +6,7 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
-
-@Component
-export default class MenuView extends Vue {}
+export default {
+  name: 'MenuView',
+};
 </script>

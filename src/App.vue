@@ -1,32 +1,24 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <app-splitter></app-splitter>
+    <v-ons-toast :visible.sync="visible">
+      {{ visible ? active.message : '' }}
+    </v-ons-toast>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { mapState, mapGetters } from 'vuex';
+import AppSplitter from '@/AppSplitter.vue';
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+export default {
+  name: 'App',
+  components: {
+    AppSplitter,
+  },
+  computed: {
+    ...mapGetters('alert', ['visible']),
+    ...mapState('alert', ['active']),
+  },
+};
+</script>

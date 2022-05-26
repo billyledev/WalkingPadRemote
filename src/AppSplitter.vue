@@ -7,31 +7,31 @@
     >
       <Menu/>
     </v-ons-splitter-side>
-    <v-ons-spliter-content>
+    <v-ons-splitter-content>
       <Home/>
-    </v-ons-spliter-content>
+    </v-ons-splitter-content>
   </v-ons-splitter>
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
-
 import Menu from '@/views/MenuView.vue';
 import Home from '@/views/HomeView.vue';
 
-@Component({
+export default {
+  name: 'AppSplitter',
   components: {
     Menu,
     Home,
   },
-})
-export default class AppSplitter extends Vue {
-  get isOpen() {
-    return this.$store.state.splitter.open;
-  }
-
-  set isOpen(newValue) {
-    this.$store.commit('splitter/toggle', newValue);
-  }
-}
+  computed: {
+    isOpen: {
+      get() {
+        return this.$store.state.splitter.open;
+      },
+      set(newValue) {
+        this.$store.commit('splitter/toggle', newValue);
+      },
+    },
+  },
+};
 </script>
