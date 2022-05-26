@@ -17,6 +17,10 @@ const DISTANCE_LENGTH = 3;
 const STEPS_OFFSET = 11;
 const STEPS_LENGTH = 3;
 
+function isSet(field) {
+  return typeof field === 'number';
+}
+
 function buildCommand(command, value) {
   return Uint8Array.of(0xF7, 0xA2, command, value, 0xA2 + command + value, 0xFD);
 }
@@ -61,12 +65,12 @@ const treadmillModule = {
   },
   mutations: {
     updateData(state, data) {
-      if (data.state) state.state = data.state;
-      if (data.mode) state.mode = data.mode;
-      if (data.speed) state.speed = data.speed;
-      if (data.time) state.time = data.time;
-      if (data.distance) state.distance = data.distance;
-      if (data.steps) state.steps = data.steps;
+      if (isSet(data.state)) state.state = data.state;
+      if (isSet(data.mode)) state.mode = data.mode;
+      if (isSet(data.speed)) state.speed = data.speed;
+      if (isSet(data.time)) state.time = data.time;
+      if (isSet(data.distance)) state.distance = data.distance;
+      if (isSet(data.steps)) state.steps = data.steps;
     },
     setReadCharacteristic(state, readCharacteristic) {
       state.readCharacteristic = readCharacteristic;
