@@ -12,10 +12,12 @@ const toastTimeout = (callback) => setTimeout(callback, TOAST_DURATION);
 const alertModule = {
   namespaced: true,
   state: {
+    active: undefined,
+    timeoutId: undefined,
     queue: [],
   },
   getters: {
-    visible: (state) => state.active,
+    visible: (state) => !!state.active,
   },
   mutations: {
     enqueue(state, { toast }) {
@@ -31,13 +33,13 @@ const alertModule = {
       const { timeoutId } = state;
       if (timeoutId) clearTimeout(timeoutId);
 
-      delete state.active;
-      delete state.timeoutId;
+      state.active = undefined;
+      state.timeoutId = undefined;
     },
   },
   actions: {
     pushToast(context, toast) {
-      context.commit('enqueue', toast);
+      context.commit('enqueue', { toast });
       if (!context.state.active) context.dispatch('processQueue');
     },
     processQueue(context) {
