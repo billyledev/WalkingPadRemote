@@ -45,6 +45,7 @@ const treadmillModule = {
     time: 0,
     distance: 0,
     steps: 0,
+    error: '',
   },
   getters: {
     speed(state) {
@@ -81,38 +82,46 @@ const treadmillModule = {
   },
   actions: {
     setup(context) {
-      navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: [
-          WP_SERVICE_ID,
-        ],
-      }).then((device) => device.gatt?.connect())
-        .then((server) => server?.getPrimaryService(WP_SERVICE_ID))
-        .then((service) => {
-          // Receive data from WalkingPad
-          service?.getCharacteristic(WP_READ_CHARACTERISTIC_ID)
-            .then((readCharacteristic) => readCharacteristic.startNotifications())
-            .then((readCharacteristic) => {
-              context.commit('setReadCharacteristic', readCharacteristic);
+      return new Promise((resolve, reject) => {
+        navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: [
+            WP_SERVICE_ID,
+          ],
+        }).then((device) => device.gatt?.connect())
+          .then((server) => server?.getPrimaryService(WP_SERVICE_ID))
+          .then((service) => {
+            // Receive data from WalkingPad
+            service?.getCharacteristic(WP_READ_CHARACTERISTIC_ID)
+              .then((readCharacteristic) => readCharacteristic.startNotifications())
+              .then((readCharacteristic) => {
+                context.commit('setReadCharacteristic', readCharacteristic);
 
-              readCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
-                const receivedValue = event.target.value;
-                if (receivedValue) {
-                  const dataArray = new Uint8Array(receivedValue.buffer);
-                  context.dispatch('treadmill/updateData', dataArray, { root: true });
-                }
+                readCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+                  const receivedValue = event.target.value;
+                  if (receivedValue) {
+                    const dataArray = new Uint8Array(receivedValue.buffer);
+                    context.dispatch('treadmill/updateData', dataArray, { root: true });
+                  }
+                }).then(() => {
+                  service?.getCharacteristic(WP_WRITE_CHARACTERISTIC_ID)
+                    .then((writeCharacteristic) => {
+                      resolve();
+                      context.commit('setWriteCharacteristic', writeCharacteristic);
+                    }).catch((error) => {
+                      reject(error);
+                    });
+                }).reject((error) => {
+                  reject(error);
+                });
+              }).catch((error) => {
+                reject(error);
               });
-            }).catch((error) => {
-              console.error(error);
-            });
-
-          service?.getCharacteristic(WP_WRITE_CHARACTERISTIC_ID).then((writeCharacteristic) => {
-            context.commit('setWriteCharacteristic', writeCharacteristic);
+          })
+          .catch((error) => {
+            reject(error);
           });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      });
     },
     requestData(context) {
       const command = buildCommand(REQUEST_DATA_CMD, 0x00);

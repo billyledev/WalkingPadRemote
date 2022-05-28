@@ -8,7 +8,6 @@
       <Menu/>
     </v-ons-splitter-side>
     <v-ons-splitter-content>
-      <router-view></router-view>
     </v-ons-splitter-content>
   </v-ons-splitter>
 </template>
