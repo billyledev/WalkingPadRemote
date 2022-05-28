@@ -103,17 +103,15 @@ const treadmillModule = {
                     const dataArray = new Uint8Array(receivedValue.buffer);
                     context.dispatch('treadmill/updateData', dataArray, { root: true });
                   }
-                }).then(() => {
-                  service?.getCharacteristic(WP_WRITE_CHARACTERISTIC_ID)
-                    .then((writeCharacteristic) => {
-                      resolve();
-                      context.commit('setWriteCharacteristic', writeCharacteristic);
-                    }).catch((error) => {
-                      reject(error);
-                    });
-                }).reject((error) => {
-                  reject(error);
                 });
+
+                service?.getCharacteristic(WP_WRITE_CHARACTERISTIC_ID)
+                  .then((writeCharacteristic) => {
+                    resolve();
+                    context.commit('setWriteCharacteristic', writeCharacteristic);
+                  }).catch((error) => {
+                    reject(error);
+                  });
               }).catch((error) => {
                 reject(error);
               });
