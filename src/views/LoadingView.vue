@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
+import AppSplitter from '@/components/AppSplitter.vue';
 
 export default {
   name: 'LoadingView',
@@ -30,14 +31,15 @@ export default {
     };
   },
   methods: {
+    ...mapMutations('navigator', ['push']),
     ...mapActions('treadmill', ['setup']),
     ...mapActions('alert', ['pushToast']),
     connect() {
       if (this.loading) return;
       this.loading = true;
       setTimeout(() => {
-        this.setup().then((result) => {
-          console.log(result);
+        this.setup().then(() => {
+          this.push(AppSplitter);
         }, (error) => {
           this.error = true;
           this.loading = false;

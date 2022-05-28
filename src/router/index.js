@@ -1,18 +1,21 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import AppNavigator from '@/components/AppNavigator.vue';
+import RemoteView from '@/views/RemoteView.vue';
+import StatsView from '@/views/StatsView.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    component: AppNavigator,
+    name: 'remote',
+    component: RemoteView,
   },
   {
-    path: '*',
-    redirect: '/',
+    path: '/stats',
+    name: 'stats',
+    component: StatsView,
   },
 ];
 

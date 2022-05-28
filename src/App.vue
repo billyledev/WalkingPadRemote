@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <app-navigator></app-navigator>
     <v-ons-toast :visible.sync="visible">
       {{ visible ? active.message : '' }}
     </v-ons-toast>
@@ -9,8 +9,10 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import AppNavigator from './components/AppNavigator.vue';
 
 export default {
+  components: { AppNavigator },
   name: 'App',
   computed: {
     ...mapGetters('alert', ['visible']),
