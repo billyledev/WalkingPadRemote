@@ -4,6 +4,8 @@ const WP_WRITE_CHARACTERISTIC_ID = '0000fe02-0000-1000-8000-00805f9b34fb';
 const REQUEST_DATA_CMD = 0x00;
 const SET_SPEED_CMD = 0x01;
 const SET_MODE_CMD = 0x02;
+const SET_STATE_CMD = 0x04;
+const STATE_RUNNING = 0x01;
 const STATE_OFFSET = 2;
 const STATE_LENGTH = 1;
 const SPEED_OFFSET = 3;
@@ -45,7 +47,7 @@ const treadmillModule = {
     time: 0,
     distance: 0,
     steps: 0,
-    error: '',
+    updateTimer: null,
   },
   getters: {
     speed(state) {
@@ -78,6 +80,10 @@ const treadmillModule = {
     },
     setWriteCharacteristic(state, writeCharacteristic) {
       state.writeCharacteristic = writeCharacteristic;
+    },
+    clearTimer(state) {
+      clearInterval(state.updateTimer);
+      state.updateTimer = null;
     },
   },
   actions: {
@@ -112,6 +118,12 @@ const treadmillModule = {
                   }).catch((error) => {
                     reject(error);
                   });
+
+                if (!context.state.updateTimer) {
+                  setInterval(() => {
+                    context.dispatch('treadmill/requestData', {}, { root: true });
+                  }, 1000);
+                }
               }).catch((error) => {
                 reject(error);
               });
@@ -142,6 +154,11 @@ const treadmillModule = {
         distance: Uint8ArrayToUint32(getData(data, DISTANCE_OFFSET, DISTANCE_LENGTH)),
         steps: Uint8ArrayToUint32(getData(data, STEPS_OFFSET, STEPS_LENGTH)),
       });
+    },
+    startBelt(context) {
+      const command = buildCommand(SET_STATE_CMD, STATE_RUNNING);
+      context.state.writeCharacteristic?.writeValueWithoutResponse(command);
+      return true;
     },
     updateMode(context, mode) {
       if (![0, 1].includes(context.state.mode)) return false;

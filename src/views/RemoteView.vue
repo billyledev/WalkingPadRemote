@@ -15,7 +15,7 @@
           <v-ons-button modifier="quiet" @click="speedUp()">+</v-ons-button>
         </div>
         <div>
-          <v-ons-button modifier="outline" @click="stop()">Stop</v-ons-button>
+          <v-ons-button modifier="outline" @click="stop()">{{ speed === 0 ? 'Start' : 'Stop' }}</v-ons-button>
         </div>
       </div>
     </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Toolbar from '@/components/Toolbar.vue';
 
 export default {
@@ -64,6 +64,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('treadmill', ['startBelt']),
     speedDown() {
       if (this.speed === 0) return;
       this.speed -= 5;
@@ -73,7 +74,11 @@ export default {
       this.speed += 5;
     },
     stop() {
-      this.speed = 0;
+      if (this.speed !== 0) {
+        this.speed = 0;
+      } else {
+        this.startBelt();
+      }
     },
   },
 };
