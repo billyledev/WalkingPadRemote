@@ -123,7 +123,15 @@ const treadmillModule = {
     },
     requestData(context) {
       const command = buildCommand(REQUEST_DATA_CMD, 0x00);
-      context.state.writeCharacteristic?.writeValueWithoutResponse(command);
+      context.state.writeCharacteristic?.writeValueWithoutResponse(command).then(() => {}, () => {
+        context.commit('clearTimer');
+        context.dispatch('alert/pushToast', {
+          message: 'Connection lost, refreshing...',
+        }, { root: true });
+        setTimeout(() => {
+          document.location.reload();
+        }, 3000);
+      });
     },
     updateData(context, data) {
       context.commit('updateData', {
